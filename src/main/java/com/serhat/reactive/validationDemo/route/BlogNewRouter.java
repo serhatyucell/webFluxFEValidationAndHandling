@@ -1,8 +1,7 @@
 package com.serhat.reactive.validationDemo.route;
 
-import com.serhat.reactive.validationDemo.exception.BadRequestException;
-import com.serhat.reactive.validationDemo.request.BlogRequest;
 import com.serhat.reactive.validationDemo.handler.GlobalRequestValidationHandler;
+import com.serhat.reactive.validationDemo.request.BlogRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,20 +12,18 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 @Configuration
-public class BlogRouter extends AbstractRouter {
-
+public class BlogNewRouter {
     @Autowired
     GlobalRequestValidationHandler reqValidator;
 
     @Bean
-    public RouterFunction<ServerResponse> BlogRouter() {
+    public RouterFunction<ServerResponse> BlogNewRouter() {
         return RouterFunctions.route()
-                .POST("blog", this::blogHandler)
-                .onError(BadRequestException.class, this::handleException)
+                .POST("blogNew", this::blogNewHandler)
                 .build();
     }
 
-    Mono<ServerResponse> blogHandler(ServerRequest request) {
+    Mono<ServerResponse> blogNewHandler(ServerRequest request) {
         return request.bodyToMono(BlogRequest.class)
                 .flatMap(this.reqValidator::validateRequest)
                 .flatMap(reqObject -> {

@@ -1,17 +1,17 @@
-package com.serhat.reactive.validationDemo.validator;
+package com.serhat.reactive.validationDemo.handler;
 
 import com.serhat.reactive.validationDemo.exception.BadRequestException;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 
 @Component
-public class GlobalRequestValidator {
+public class GlobalRequestValidationHandler {
     @Autowired
     Validator validator;
 
