@@ -1,5 +1,6 @@
 package com.serhat.reactive.validationDemo.validator;
 
+import com.serhat.reactive.validationDemo.exception.BadRequestException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -18,13 +19,13 @@ public class GlobalRequestValidator {
 
         //Request objesi null gönderilebilir
         if (requestObj == null) {
-            return Mono.error(new IllegalArgumentException());
+            return Mono.error(new BadRequestException("İstek boş gönderilemez."));
         }
 
         //jakarta validasyonunu kullan
         Set<ConstraintViolation<T>> violatedRules = this.validator.validate(requestObj);
 
         //Herhangi bir hata yoksa request objesini dön varsa hata dön.
-        return (violatedRules == null || violatedRules.isEmpty()) ? Mono.just(requestObj) : Mono.error(new ConstraintViolationException(violatedRules));
+        return (violatedRules == null || violatedRules.isEmpty()) ? Mono.just(requestObj) : Mono.error(new BadRequestException(violatedRules.stream().map(e -> e.getMessage()).toList()));
     }
 }

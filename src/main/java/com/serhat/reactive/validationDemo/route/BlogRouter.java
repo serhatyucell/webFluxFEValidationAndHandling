@@ -1,6 +1,8 @@
 package com.serhat.reactive.validationDemo.route;
 
+import com.serhat.reactive.validationDemo.exception.BadRequestException;
 import com.serhat.reactive.validationDemo.request.BlogRequest;
+import com.serhat.reactive.validationDemo.response.BadRequestResponse;
 import com.serhat.reactive.validationDemo.validator.GlobalRequestValidator;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ public class BlogRouter {
     public RouterFunction<ServerResponse> BlogRouter() {
         return RouterFunctions.route()
                 .POST("blog", this::blogHandler)
-                .onError(ConstraintViolationException.class, this::handleException)
+                .onError(BadRequestException.class, this::handleException)
                 .build();
     }
 
@@ -35,6 +37,7 @@ public class BlogRouter {
     }
 
     Mono<ServerResponse> handleException(Throwable error, ServerRequest request) {
-        return ServerResponse.badRequest().bodyValue(error.getMessage());
+        BadRequestResponse resp = new BadRequestResponse(((BadRequestException) error).getErrorList());
+        return ServerResponse.badRequest().bodyValue(resp);
     }
 }
