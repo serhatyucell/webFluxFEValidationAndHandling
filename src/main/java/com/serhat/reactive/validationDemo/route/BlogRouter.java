@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 @Configuration
-public class BlogRouter {
+public class BlogRouter extends AbstractRouter {
 
     @Autowired
     GlobalRequestValidator reqValidator;
@@ -34,10 +34,5 @@ public class BlogRouter {
                 .flatMap(reqObject -> {
                     return ServerResponse.ok().bodyValue(reqObject);
                 });
-    }
-
-    Mono<ServerResponse> handleException(Throwable error, ServerRequest request) {
-        BadRequestResponse resp = new BadRequestResponse(((BadRequestException) error).getErrorList());
-        return ServerResponse.badRequest().bodyValue(resp);
     }
 }
